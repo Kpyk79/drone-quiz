@@ -112,7 +112,10 @@ function draw(s) {
     const url = joinUrl(s.code);
     const wall = (s.lobby || []).slice(-60).map((p) => `<span class="tag"><span>${esc(p.avatar)}</span>${esc(p.name)}</span>`).join('');
     app().innerHTML = `<div class="wrap"><div class="lobby-grid">
-      <div class="qr"><div id="qr"></div><div class="code">${esc(s.code)}</div><div class="url">${esc(url)}</div></div>
+      <div class="qr"><div id="qr"></div>
+        <div class="hint">Немає сканера? Відкрий сайт</div>
+        <div class="url">${esc(url.replace(/^https?:\/\//, '').replace(/\?.*$/, '').replace(/\/(index\.html)?$/, ''))}</div>
+        <div class="hint">і введи код</div><div class="code">${esc(s.code)}</div></div>
       <div style="display:flex;flex-direction:column;gap:18px;align-items:center">
         <p class="kicker">Скануй · Грай · Вигравай</p>
         <h1 class="mega xl">Дрон-Шоу</h1>

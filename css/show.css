@@ -143,8 +143,9 @@ button.ans:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0, 0, 0
 .lobby-grid { display: grid; grid-template-columns: minmax(260px, 38vw) 1fr; gap: clamp(18px, 4vw, 60px); align-items: center; width: 100%; max-width: 1500px; }
 .qr { background: #fff; padding: 18px; border-radius: 28px; box-shadow: 0 0 0 6px var(--yellow), 0 0 80px rgba(255, 230, 0, .35); }
 .qr canvas, .qr img { width: 100% !important; height: auto !important; display: block; }
-.code { font-family: var(--display); font-weight: 900; font-size: clamp(30px, 5vw, 64px); letter-spacing: .2em; color: #000; margin-top: 8px; }
-.url { font-size: 13px; color: #555; word-break: break-all; }
+.code { font-family: var(--display); font-weight: 900; font-size: clamp(30px, 5vw, 64px); letter-spacing: .2em; color: #000; line-height: 1.1; }
+.url { font-family: var(--display); font-weight: 800; font-size: clamp(15px, 2.1vw, 28px); color: #000; overflow-wrap: anywhere; line-height: 1.2; }
+.hint { font-weight: 800; font-size: clamp(12px, 1.4vw, 17px); color: #555; text-transform: uppercase; letter-spacing: .08em; margin-top: 12px; }
 .winner-av { font-size: clamp(110px, 26vw, 280px); line-height: 1; filter: drop-shadow(0 20px 40px rgba(0, 0, 0, .4)); animation: float 2.4s ease-in-out infinite; }
 @keyframes float { 50% { transform: translateY(-16px) rotate(-3deg); } }
 .blink { animation: blink 1s steps(2) infinite; }
