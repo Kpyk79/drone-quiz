@@ -37,6 +37,7 @@ create table public.quiz_games (
   resolve_at timestamptz,
   no_correct boolean not null default false,
   winner_id uuid,
+  question_order int[],
   created_at timestamptz not null default now()
 );
 create index on public.quiz_games (code, created_at desc);
@@ -79,7 +80,9 @@ create function public.quiz_question_row(g public.quiz_games) returns public.qui
 language sql stable security definer set search_path = public as $$
   select q.* from quiz_questions q
   where q.set_name = g.set_name
-    and q.position = (g.stage_no - 1) % greatest(1, (select count(*) from quiz_questions where set_name = g.set_name))
+    and q.position = coalesce(
+      g.question_order[((g.stage_no - 1) % array_length(g.question_order, 1)) + 1],
+      (g.stage_no - 1) % greatest(1, (select count(*) from quiz_questions where set_name = g.set_name)))
 $$;
 
 -- How many players go through this stage. Always eliminates at least one; final (k = 1) leaves a single winner.
@@ -217,9 +220,10 @@ begin
     tries := tries + 1;
     if tries > 60 then raise exception 'no free code'; end if;
   end loop;
-  insert into quiz_games (code, lobby_ends_at, keep_ratio)
+  insert into quiz_games (code, lobby_ends_at, keep_ratio, question_order)
     values (c, clock_timestamp() + make_interval(mins => least(greatest(coalesce(p_minutes, 10), 0), 120)),
-            least(greatest(coalesce(p_ratio, 0.5), 0.1), 0.9))
+            least(greatest(coalesce(p_ratio, 0.5), 0.1), 0.9),
+            (select array_agg(position order by random()) from quiz_questions where set_name = 'drones'))
     returning * into g;
   return json_build_object('game_id', g.id, 'code', g.code, 'secret', g.host_secret);
 end $$;
