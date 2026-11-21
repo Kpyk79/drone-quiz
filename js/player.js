@@ -2,6 +2,7 @@ import { rpc, createPoller } from './api.js';
 import { AVATARS } from './config.js';
 import { app, esc, store, mmss, setFlood, answersHtml, ringHtml, startTicker } from './ui.js';
 import { unlockAudio, sfx, vibrate, keepAwake, confetti } from './fx.js';
+import { startThermal } from './thermal.js';
 
 const KEY = 'drone_show_player';
 let poller = null, stopTicker = null, renderKey = '', prevPhase = null, pending = null, pendingStage = 0;
@@ -131,6 +132,9 @@ function draw(s, me) {
       ? `<div class="wrap"><div class="winner-av">🏆</div><h1 class="mega xl white">Перемога!</h1><p class="lead" style="color:#000">Підходь до ведучого за призом! 🎁</p></div>`
       : `<div class="wrap"><p class="kicker">Переможець шоу</p><div class="winner-av">${esc(s.winner?.avatar || '🏆')}</div>
          <h1 class="mega l">${esc(s.winner?.name || '')}</h1><p class="lead">Дякуємо за гру! 💙💛</p></div>`;
+    app().querySelector('.wrap').insertAdjacentHTML('beforeend',
+      '<button class="btn huge pink" id="fly">🚁 Політати на дроні</button><p class="lead">Нічна рятувальна місія з тепловізором 🔥</p>');
+    document.getElementById('fly').onclick = () => startThermal();
     if (won && was !== 'finished') { confetti(); sfx.win(); }
     return;
   }
